@@ -1,0 +1,39 @@
+<ng-template #load>
+  <i class="pi pi-spin pi-spinner"></i>
+</ng-template>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button icon="pi pi-chevron-left" [routerLink]="'../'" pButton pRipple type="button" class="p-button-text"></button>
+      <om-menu-btn></om-menu-btn>
+    </ion-buttons>
+    <ion-title>
+      <ng-container *ngIf="resort$|async as resort; else load"> {{resort.nome}} </ng-container>
+    </ion-title>
+    <ion-buttons slot="end">
+      <button [disabled]="form.invalid || loading" pButton label="Salva" class="p-button-success"></button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="pad" [formGroup]="form">
+    <h5>Modifica</h5>
+
+    <div class="p-grid">
+      <div class="p-col-3">
+        <div class="p-field">
+          <label for="username2">Nome*</label>
+          <input id="username2" formControlName="nome" type="username" aria-describedby="username2-help" pInputText />
+          <small *ngIf="form.get('nome').errors" id="username2-help" class="p-error">Obbligatorio</small>
+        </div>
+      </div>
+      <div class="p-col-3"></div>
+      <div class="p-col-3"></div>
+      <div class="p-col-3"></div>
+    </div>
+  </div>
+  "nome": "string", "descrizione": "string", "indirizzo": "string", "telefono": "string", "telefono_wa": "string", "email": "string",
+  "sito": "string", "latitudine": "string", "longitudine": "string", "link": "string", "visibile": "string", "cliente": true, "flag_ann": 0,
+  "data_creazione": "2022-01-09T14:24:39.092Z", "data_modifica": "2022-01-09T14:24:39.092Z"
+</ion-content>

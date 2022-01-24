@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <om-menu-btn></om-menu-btn>
+    </ion-buttons>
+    <ion-title>Stabilimenti</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="pad">
+    <h1>Lista Stabilimenti</h1>
+    <div class="grid">
+      <div class="col">
+        <p-card>
+          <p-table
+            #dt
+            [value]="stabilimenti$|async"
+            dataKey="id"
+            styleClass="p-datatable-customers"
+            [rowHover]="true"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10,25,50]"
+            [paginator]="true"
+            currentPageReportTemplate="{first} di {last} per un totale di {totalRecords} stabilimenti"
+            [filterDelay]="0"
+            [globalFilterFields]="['nome','email','telefono']"
+          >
+            <ng-template pTemplate="caption">
+              <div class="table-header">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input
+                    pInputText
+                    type="text"
+                    (input)="dt.filterGlobal($event.target['value'], 'contains')"
+                    placeholder="Ricerca globale"
+                  />
+                </span>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+              <tr>
+                <th pSortableColumn="nome">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    Nome
+                    <p-sortIcon field="nome"></p-sortIcon>
+                    <p-columnFilter type="text" field="nome" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="email">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    Email
+                    <p-sortIcon field="email"></p-sortIcon>
+                    <p-columnFilter type="text" field="email" display="menu" class="p-ml-auto"></p-columnFilter>
+                  </div>
+                </th>
+                <th pSortableColumn="telefono">
+                  <div class="p-d-flex p-jc-between p-ai-center">
+                    Telefono
+                    <p-sortIcon field="telefono"></p-sortIcon>
+                    <p-columnFilter
+                      field="telefono"
+                      matchMode="in"
+                      display="menu"
+                      [showMatchModes]="false"
+                      [showOperator]="false"
+                      [showAddButton]="false"
+                      class="p-ml-auto"
+                    >
+                      <ng-template pTemplate="header">
+                        <div class="p-px-3 p-pt-3 p-pb-0">
+                          <span class="p-text-bold">Agent Picker</span>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-multiSelect [ngModel]="value" placeholder="Any" (onChange)="filter($event['value'])" optionLabel="name">
+                          <ng-template let-option pTemplate="item">
+                            <div class="p-multiselect-representative-option">
+                              <img
+                                [alt]="option.label"
+                                src="assets/showcase/images/demo/avatar/{{option.image}}"
+                                width="32"
+                                style="vertical-align: middle"
+                              />
+                              <span class="p-ml-1">{{option.name}}</span>
+                            </div>
+                          </ng-template>
+                        </p-multiSelect>
+                      </ng-template>
+                    </p-columnFilter>
+                  </div>
+                </th>
+
+                <th>
+                  <div class="p-d-flex p-jc-between p-ai-center">Azioni</div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-resort>
+              <tr class="p-selectable-row">
+                <td>
+                  <span class="p-column-title">Nome</span>
+                  {{resort.nome}}
+                </td>
+                <td>
+                  <span class="p-column-title">Email</span>
+                  {{resort.email}}
+                </td>
+                <td>
+                  <span class="p-column-title">Telefono</span>
+                  {{resort.telefono}}
+                </td>
+                <td>
+                  <button [routerLink]="'./' + resort.id" pButton pRipple label="Dettaglio"></button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="8">Nessuno stabilimento trovato.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</ion-content>

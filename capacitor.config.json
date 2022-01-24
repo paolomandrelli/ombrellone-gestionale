@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Ombrellone Gestionale",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

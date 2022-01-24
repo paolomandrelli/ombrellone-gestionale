@@ -1,0 +1,130 @@
+<ng-template #fatLoader>
+  <ion-skeleton-text animated style="width: 100%; height: 86px" [innerText]="'Caricamento in corso'"></ion-skeleton-text>
+</ng-template>
+
+<ion-header #header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <om-menu-btn></om-menu-btn>
+    </ion-buttons>
+    <ion-title>Gestisci Prenotazioni</ion-title>
+    <ion-buttons slot="end">
+      <button pButton label="Salva" class="p-button-success"></button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [formGroup]="form">
+  <ng-container *ngIf="stabilimenti$|async as stabilimenti; else fatLoader">
+    <div @fadeIn class="grid">
+      <div class="col-6">
+        <p>
+          Stai lavorando su
+
+          <p-dropdown [appendTo]="'body'" optionValue="id" [options]="stabilimenti" optionLabel="nome"></p-dropdown>
+        </p>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="map-wrapper">
+    <div #map dropEffect="copy" pDroppable="dd" id="map">
+      <div
+        [ngClass]="{
+          selected: umbrella.value.selected
+        }"
+        (click)="selectUmbrella(umbrella)"
+        pDraggable="dd"
+        class="umbrella"
+        *ngFor="let umbrella of umbrellas.controls"
+        [ngStyle]="{
+              top: umbrella.value.coord_y + '%',
+              left: umbrella.value.coord_x + '%'
+            }"
+      >
+        <img [id]="umbrella.value.id" height="30" width="30" src="assets/parasol.png" alt="" />
+        <label> {{umbrella.value.descrizione}} </label>
+      </div>
+
+      <img class="map" src="assets/mappa.svg" alt="" />
+    </div>
+  </div>
+</ion-content>
+
+<p-dialog
+  [style]="{'min-height': '400px', width: '400px'}"
+  [resizable]="true"
+  (onHide)="deselectAll()"
+  [focusTrap]="true"
+  header="Crea Prenotazione "
+  [position]="'right'"
+  [(visible)]="!!selectedUmbrella"
+>
+  <ng-container *ngIf="selectedUmbrella" [formGroup]="reservationForm">
+    <div class="grid p-fluid">
+      <div class="col-9">
+        <p-dropdown [options]="users$|async" placeholder="Cliente*"></p-dropdown>
+      </div>
+      <div class="col-3">
+        <button (click)="showAddClientmodal()" pButton label="+"></button>
+      </div>
+      <div class="col-6">
+        <div class="p-field">
+          <label>Dal</label>
+          <p-calendar appendTo="body" inputId="basic" formControlName="data_inizio"></p-calendar>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-field">
+          <label>Al</label>
+          <p-calendar appendTo="body" inputId="basic" formControlName="data_fine"></p-calendar>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-field">
+          <label>&nbsp;</label>
+          <button (click)="createReservation()" pButton label="Crea Prenotazione"></button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</p-dialog>
+
+<p-dialog
+  [style]="{'min-height': '400px', width: '400px'}"
+  [resizable]="true"
+  header="Crea Utente"
+  [position]="'center'"
+  [(visible)]="!!addClient"
+  [formGroup]="userForm"
+>
+  <ng-container>
+    <div class="grid p-fluid">
+      <div class="col-6">
+        <div class="p-field">
+          <label>Nome*</label>
+          <input formControlName="name" pInputText required />
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-field">
+          <label>Cognome*</label>
+          <input formControlName="cognome" pInputText required />
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="p-field">
+          <label>Email*</label>
+
+          <input type="email" formControlName="email" pInputText required />
+        </div>
+      </div>
+      <div class="col-6">
+        <label>&nbsp;</label>
+
+        <button (click)="createUser()" pButton label="Crea Utente" [disabled]="loading||userForm.invalid"></button>
+      </div>
+      <div class="col-6"></div>
+    </div>
+  </ng-container>
+</p-dialog>

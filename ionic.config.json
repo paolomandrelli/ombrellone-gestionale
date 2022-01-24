@@ -1,0 +1,7 @@
+{
+  "name": "Ombrellone Gestionale",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

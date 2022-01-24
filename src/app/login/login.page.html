@@ -1,0 +1,40 @@
+<ng-template #empty>
+  <small>&nbsp;</small>
+</ng-template>
+<ion-content>
+  <om-responsive-container [formGroup]="loginForm">
+    <ng-container om-content>
+      <div class="centered" style="height: 100vh">
+        <p-card header="Gestionale Ombrellone" [style]="{'width': '40vw', 'margin-bottom': '2em'}">
+          <ng-template pTemplate="header">
+            <div class="centered">
+              <img style="max-width: 100px" height="100" width="100" alt="Card" src="assets/icon.png" />
+            </div>
+          </ng-template>
+          <div class="p-field">
+            <label for="username2">Email*</label>
+            <input type="email" formControlName="email" id="username2" type="username" aria-describedby="username2-help" pInputText />
+            <small
+              *ngIf="loginForm.controls.email.errors && loginForm.controls.email.dirty && loginForm.controls.email.touched; else empty"
+              id="username2-help"
+              class="p-error"
+              >Inserire un'email valida</small
+            >
+          </div>
+          <div class="p-field">
+            <label for="username2">Password*</label>
+            <input type="password" formControlName="password" id="username2" aria-describedby="username2-help" pInputText />
+            <small
+              *ngIf="loginForm.controls.password.errors && loginForm.controls.password.dirty; else empty"
+              id="username2-help"
+              class="p-error"
+              >La password è obbligatoria.</small
+            >
+          </div>
+          <hr />
+          <p-button pRipple (click)="login()" label="Accedi" [disabled]="loginForm.invalid"></p-button>
+        </p-card>
+      </div>
+    </ng-container>
+  </om-responsive-container>
+</ion-content>

@@ -1,0 +1,87 @@
+<ng-template #fatLoader>
+  <ion-skeleton-text animated style="width: 100%; height: 86px" [innerText]="'Caricamento in corso'"></ion-skeleton-text>
+</ng-template>
+
+<ion-header #header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <om-menu-btn></om-menu-btn>
+    </ion-buttons>
+    <ion-title>Designer Spiaggia</ion-title>
+    <ion-buttons slot="end">
+      <button pButton label="Salva" class="p-button-success"></button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [formGroup]="form">
+  <ng-container *ngIf="stabilimenti$|async as stabilimenti; else fatLoader">
+    <div @fadeIn class="grid">
+      <div class="col-6">
+        <p>
+          Stai lavorando su
+
+          <p-dropdown [appendTo]="'body'" optionValue="id" [options]="stabilimenti" optionLabel="nome"></p-dropdown>
+        </p>
+      </div>
+      <div class="col-6 centered">
+        <button pButton label="Aggiungi Ombrellone" (click)="addUmbrellaAtZeroZero()"></button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="map-wrapper">
+    <div #map dropEffect="copy" pDroppable="dd" id="map">
+      <div
+        [ngClass]="{
+          selected: umbrella.value.selected
+        }"
+        (click)="selectUmbrella(umbrella)"
+        pDraggable="dd"
+        class="umbrella"
+        *ngFor="let umbrella of umbrellas.controls"
+        [ngStyle]="{
+              top: umbrella.value.coord_y + '%',
+              left: umbrella.value.coord_x + '%'
+            }"
+      >
+        <img [id]="umbrella.value.id" height="30" width="30" src="assets/parasol.png" alt="" />
+        <label> {{umbrella.value.descrizione}} </label>
+      </div>
+
+      <div class="controls">
+        <div class="ctrl">
+          <button (click)="increaseScaleSize()" pButton label="+" class="p-button-secondary"></button>
+        </div>
+        <div class="ctrl">
+          <button (click)="decreaseScaleSize()" pButton label="-" class="p-button-secondary"></button>
+        </div>
+      </div>
+      <img class="map" src="assets/mappa.svg" alt="" />
+    </div>
+  </div>
+</ion-content>
+<p-dialog
+  [style]="{'min-height': '300px', width: '300px'}"
+  [resizable]="true"
+  (onHide)="deselectAll()"
+  [focusTrap]="true"
+  header="Gestione Ombrellone"
+  [position]="'right'"
+  [(visible)]="!!selectedUmbrella"
+>
+  <ng-container *ngIf="selectedUmbrella" [formGroup]="selectedUmbrella">
+    <div class="p-field">
+      <label>Descrizione*</label>
+      <input [readonly]="false" maxlength="10" placeholder="Massimo 10 caratteri" formControlName="descrizione" type="text" pInputText />
+      <small *ngIf="selectedUmbrella.get('descrizione').errors && selectedUmbrella.get('descrizione').dirty" class="p-error">
+        <ng-container *ngIf="selectedUmbrella.get('descrizione').errors.required"> È obbligatorio. </ng-container>
+        <ng-container *ngIf="selectedUmbrella.get('descrizione').errors.maxlength"> Massimo 10 caratteri. </ng-container>
+      </small>
+    </div>
+    <div class="p-field">
+      <label>Fila</label>
+      <input type="number" formControlName="numero_fila" pInputText min="1" />
+    </div>
+  </ng-container>
+</p-dialog>
